@@ -5,6 +5,14 @@ pipeline {
         maven 'Maven'
     }
 
+    environment {
+        NEXUS_URL = 'localhost:8081'
+        REPOSITORY = 'maven-releases'
+        GROUP_ID = 'com.example'
+        ARTIFACT_ID = 'springboot-app'
+        VERSION = '1.0.0'
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -16,6 +24,35 @@ pipeline {
             steps {
                 dir('complete') {
                     sh 'mvn clean package'
+                }
+            }
+        }
+
+        stage('Upload to Nexus') {
+            steps {
+                script {
+                    def jarFile = sh(
+                        script: "ls complete/target/*.jar",
+                        returnStdout: true
+                    ).trim()
+
+                    nexusArtifactUploader(
+                        nexusVersion: 'nexus3',
+                        protocol: 'http',
+                        nexusUrl: env.NEXUS_URL,
+                        groupId: env.GROUP_ID,
+                        version: env.VERSION,
+                        repository: env.REPOSITORY,
+                        credentialsId: 'nexus-creds',
+                        artifacts: [
+                            [
+                                artifactId: env.ARTIFACT_ID,
+                                classifier: '',
+                                file: jarFile,
+                                type: 'jar'
+                            ]
+                        ]
+                    )
                 }
             }
         }
