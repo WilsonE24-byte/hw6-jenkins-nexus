@@ -14,7 +14,9 @@ pipeline {
 
         stage('Build JAR') {
             steps {
-                sh 'mvn clean package'
+                dir('complete') {
+                    sh 'mvn clean package'
+                }
             }
         }
     }
