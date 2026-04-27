@@ -6,11 +6,10 @@ pipeline {
     }
 
     environment {
-        NEXUS_URL = 'localhost:8081'
-        REPOSITORY = 'maven-releases'
         GROUP_ID = 'com.example'
         ARTIFACT_ID = 'springboot-app'
         VERSION = '1.0.0'
+        REPOSITORY = 'maven-releases'
     }
 
     stages {
@@ -39,7 +38,7 @@ pipeline {
                     nexusArtifactUploader(
                         nexusVersion: 'nexus3',
                         protocol: 'http',
-                        nexusUrl: env.NEXUS_URL,
+                        nexusUrl: 'host.docker.internal:8081',
                         groupId: env.GROUP_ID,
                         version: env.VERSION,
                         repository: env.REPOSITORY,
