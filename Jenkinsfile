@@ -38,7 +38,7 @@ pipeline {
                     nexusArtifactUploader(
                         nexusVersion: 'nexus3',
                         protocol: 'http',
-                        nexusUrl: 'host.docker.internal:8081',
+                        nexusUrl: 'nexus:8081',
                         groupId: env.GROUP_ID,
                         version: env.VERSION,
                         repository: env.REPOSITORY,
